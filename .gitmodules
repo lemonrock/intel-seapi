@@ -1,0 +1,6 @@
+[submodule "lib/IntelSEAPI"]
+	path = lib/IntelSEAPI
+	url = https://github.com/intel/IntelSEAPI
+[submodule ".cargo"]
+	path = .cargo
+	url = https://github.com/lemonrock/.cargo.git
