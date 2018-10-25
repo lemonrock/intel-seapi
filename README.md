@@ -9,9 +9,7 @@ Downstream crates can use the generated build variables `cargo:include`, `cargo:
 
 ## Limitations
 
-* JIT profiling is not yet supported;
 * The dynamic library `IntelSEAPI` is built but not linked and no bindings are generated for it.
-* May not be actively supported, as I only needed this functionality once for a project I was working on.
 
 
 ## Cross-Compilation

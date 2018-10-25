@@ -18,3 +18,5 @@ extern crate libc;
 
 
 include!(concat!(env!("OUT_DIR"), "/ittnotify.bindgen.rs"));
+
+include!(concat!(env!("OUT_DIR"), "/jitprofiling.bindgen.rs"));

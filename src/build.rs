@@ -45,7 +45,9 @@ fn main()
 		
 	print_cargo_rustc_link_lib(&mislocated_bin_folder_path);
 	
-	bindgen(&include_folder_path, &out_dir)
+	bindgen_ittnotify(&include_folder_path, &out_dir);
+	
+	bindgen_jitprofiling(&include_folder_path, &out_dir)
 }
 
 fn install_folder_path(out_dir: &str) -> PathBuf
@@ -136,18 +138,7 @@ fn cmake(install_folder_path: &Path)
 		};
 		
 		config.define("CMAKE_SYSTEM_NAME", cmake_system_name);
-		
-
-		// There is a bug in the IntelSEAPI which means cross-compiling doesn't work.
-		
-		
-		
-		// if(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
 	}
-	
-	// CMAKE_OSX_ARCHITECTURES needs to be changed to avoid lipo.
-	
-	// Something is setting 'APPLE'.
 	
 	config.build();
 }
@@ -206,7 +197,7 @@ fn print_cargo_rustc_link_lib(mislocated_bin_folder_path: &Path)
 	}
 }
 
-fn bindgen(include_folder_path: &Path, out_dir: &str)
+fn bindgen_ittnotify(include_folder_path: &Path, out_dir: &str)
 {
 	let mut header_filer_path = PathBuf::from(include_folder_path);
 	header_filer_path.push("ittnotify.h");
@@ -246,6 +237,54 @@ fn bindgen(include_folder_path: &Path, out_dir: &str)
 		.expect("Unable to generate bindings for ittnotify.h")
 		.write_to_file(bindings_file_path)
 	.expect("Could not write bindgen bindings for ittnotify.h to ittnotify.bindgen.rs")
+}
+
+fn bindgen_jitprofiling(include_folder_path: &Path, out_dir: &str)
+{
+	let mut header_filer_path = PathBuf::from(include_folder_path);
+	header_filer_path.push("jitprofiling.h");
+
+	let mut rust_fmt_file_path = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
+	rust_fmt_file_path.push("rustfmt.toml");
+
+	let mut bindings_file_path = PathBuf::from(out_dir);
+	bindings_file_path.push("jitprofiling.bindgen.rs");
+
+	Builder::default()
+		.header(header_filer_path.to_str().unwrap())
+		.ctypes_prefix("::libc")
+		.default_enum_style(EnumVariation::Rust)
+		.derive_copy(true)
+		.derive_debug(true)
+		.derive_default(true)
+		.derive_eq(true)
+		.derive_hash(true)
+		.derive_ord(true)
+		.derive_partialeq(true)
+		.derive_partialord(true)
+		.generate_comments(true)
+		.impl_debug(true)
+		.impl_partialeq(true)
+		.layout_tests(false)
+		.prepend_enum_name(false)
+		.rustfmt_bindings(true)
+		.rustfmt_configuration_file(Some(rust_fmt_file_path))
+		.rust_target(RustTarget::Stable_1_26)
+		.use_core()
+		.whitelist_function("iJIT.*")
+		.whitelist_function("_iJIT.*")
+		.whitelist_function("piJIT.*")
+		.whitelist_type("iJIT.*")
+		.whitelist_type("_iJIT.*")
+		.whitelist_type("piJIT.*")
+		.whitelist_var("iJIT.*")
+		.whitelist_var("_iJIT.*")
+		.whitelist_var("piJIT.*")
+	
+		.generate()
+		.expect("Unable to generate bindings for jitprofiling.h")
+		.write_to_file(bindings_file_path)
+	.expect("Could not write bindgen bindings for jitprofiling.h to jitprofiling.bindgen.rs")
 }
 
 fn getenv_unwrap(environment_variable_name: &str) -> String
