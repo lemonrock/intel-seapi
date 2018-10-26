@@ -4,9 +4,9 @@
 
 /// A started timed event.
 #[derive(Debug)]
-pub struct StartedEvent(__itt_event, bool);
+pub struct StartedEvent<'a>(__itt_event, bool, PhantomData<&'a mut ()>);
 
-impl Drop for StartedEvent
+impl<'a> Drop for StartedEvent<'a>
 {
 	#[inline(always)]
 	fn drop(&mut self)
@@ -19,18 +19,17 @@ impl Drop for StartedEvent
 	}
 }
 
-impl StartedEvent
+impl<'a> StartedEvent<'a>
 {
 	/// A timed event has a time it starts and a time it ends.
 	#[inline(always)]
-	pub fn stop(mut self) -> Event
+	pub fn stop(mut self)
 	{
 		if self.1
 		{
-			return Event(self.0)
+			return
 		}
 		unsafe { __itt_event_end(self.0) };
-		self.1 = true;
-		Event(self.0)
+		self.1 = true
 	}
 }

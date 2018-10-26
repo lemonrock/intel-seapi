@@ -27,9 +27,9 @@ impl Event
 	///
 	/// If the result of this call is dropped, the
 	#[inline(always)]
-	pub fn time(self) -> StartedEvent
+	pub fn time<'a>(&'a mut self) -> StartedEvent<'a>
 	{
 		unsafe { __itt_event_start(self.0) };
-		StartedEvent(self.0, false)
+		StartedEvent(self.0, false, PhantomData)
 	}
 }
