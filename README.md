@@ -14,11 +14,9 @@ Downstream crates can use the generated build variables `cargo:include`, `cargo:
 
 ## Cross-Compilation
 
-This is brittle, and may fail, mostly because the underlying software uses a mixture of CMake, a C++ toolchain with Rust bindings and wrappers, and [IntelSEAPI] is not cross-compile friendly. We use a forked version to fix some cross-compilation mistakes in their `CMakeLists.txt` files.
+This is brittle, and may fail, mostly because the underlying software uses a mixture of CMake, a C++ toolchain with Rust bindings and wrappers, and [IntelSEAPI] is not cross-compile friendly. We use a forked version to fix some cross-compilation mistakes in their `CMakeLists.txt` files, generation of fat Mac OS X object archives with architectures independent of target or host, etc.
 
-Firstly, when compiling for a Mac OS X target, it is assumed the binary `lipo` is in the `PATH` as the native Mac OS X CMake build produces 'fat' archives which `rustc` can't handle. It tries to strip out the architecture of the target.
-
-Secondly, when compiling for MUSL targets, Rust's `cc` crate assumes the C compiler is `musl-gcc` and the C++ compiler if `musl-g++`. Since the `cc` crate is managed by the `cmake` crate, this is something we can't easy change. This crate attempts to set the environment variable `CROSS_COMPILE` if not set already when cross-compiling using a MUSL target.
+For example, when compiling for MUSL targets, Rust's `cc` crate assumes the C compiler is `musl-gcc` and the C++ compiler if `musl-g++`. Since the `cc` crate is managed by the `cmake` crate, this is something we can't easy change. This crate attempts to set the environment variable `CROSS_COMPILE` if not set already when cross-compiling using a MUSL target.
 
 
 ### Known cross-compilations that work.
