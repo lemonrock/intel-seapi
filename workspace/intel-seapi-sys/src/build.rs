@@ -42,8 +42,8 @@ fn main()
 	print_cargo_path_value("libdir", &mislocated_bin_folder_path);
 	
 	print_cargo_path_value("rustc-link-search", &mislocated_bin_folder_path);
-		
-	print_cargo_rustc_link_lib(&mislocated_bin_folder_path);
+
+	println!("cargo:rustc-link-lib=static=ittnotify");
 	
 	bindgen_ittnotify(&include_folder_path, &out_dir);
 	
@@ -162,39 +162,6 @@ fn include_folder_path(install_folder_path: &Path) -> PathBuf
 fn print_cargo_path_value(name: &str, path_value: &Path)
 {
 	println!("cargo:{}={}", name, path_value.to_str().unwrap());
-}
-
-fn print_cargo_rustc_link_lib(mislocated_bin_folder_path: &Path)
-{
-	let target = getenv_unwrap("TARGET");
-	let is_mac_os_x = target.ends_with("-darwin") || target.ends_with("-ios");
-	
-	// Rustc (1.31.0-nightly 2018-10-16) on Mac OS X fails to statically link the libittnotify.a library with an inaccurate error message of "error: failed to add native library ... File too small to be an archive".
-	// This is because it does not correctly recognise fat (multi-architecture) object archives.
-	if is_mac_os_x
-	{
-		use ::std::process::Command;
-	
-		let mut original_archive_file_path = PathBuf::from(mislocated_bin_folder_path);
-		original_archive_file_path.push("libittnotify.a");
-	
-		let mut thin_archive_file_path = PathBuf::from(mislocated_bin_folder_path);
-		thin_archive_file_path.push("libittnotify.a");
-		
-		let target_architecture = match target.split('-').next().unwrap()
-		{
-			"aarch64" => "arm64",
-			ok @ _ => ok,
-		};
-		
-		Command::new("lipo").current_dir(mislocated_bin_folder_path.to_str().unwrap()).arg("libittnotify.a").arg("-thin").arg(target_architecture).arg("-output").arg("libittnotify-thin.a").status().expect("failed to execute `lipo`");
-	
-		println!("cargo:rustc-link-lib=static=ittnotify-thin");
-	}
-	else
-	{
-		println!("cargo:rustc-link-lib=static=ittnotify");
-	}
 }
 
 fn bindgen_ittnotify(include_folder_path: &Path, out_dir: &str)
