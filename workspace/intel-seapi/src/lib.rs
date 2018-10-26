@@ -26,6 +26,11 @@ extern crate either;
 extern crate intel_seapi_sys;
 
 
+pub use intel_seapi_sys::iJIT_CodeArchitecture;
+pub use intel_seapi_sys::iJIT_Method_Load_V3;
+pub use intel_seapi_sys::iJIT_Method_Load;
+
+
 use ::either::*;
 use ::intel_seapi_sys::*;
 use ::std::ffi::CString;
