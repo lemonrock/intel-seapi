@@ -4,23 +4,19 @@
 
 [package]
 name = "intel-seapi"
-description = "FFI wrapper for Intel Single Event API (SEAPI) and ittnotify, as used by Intel VTune"
+description = "Mid-level wrapper for Intel Single Event API (SEAPI) and ittnotify, as used by Intel VTune"
 keywords = ["intel", "itt", "vtune", "SEAPI", "ittnotify"]
-categories = ["development-tools::profiling", "external-ffi-bindings", "hardware-support"]
+categories = ["development-tools::profiling", "hardware-support"]
 license = "MIT"
 authors = ["Raphael Cohn <raphael.cohn@stormmq.com>"]
 homepage = "https://github.com/lemonrock/intel-seapi"
 repository = "https://github.com/lemonrock/intel-seapi.git"
 exclude = ["*"]
-include = ["README.md", "LICENSE", "COPYRIGHT", "src/**/*.rs", "Cargo.toml", "rustfmt.toml", "clippy.toml", "lib/**"]
+include = ["README.md", "LICENSE", "COPYRIGHT", "src/**/*.rs", "Cargo.toml", "rustfmt.toml", "clippy.toml"]
 readme = "README.md"
-build = "src/build.rs"
 publish = true
-version = "0.0.2"
+version = "0.1.0"
 
 [dependencies]
 libc = "^0.2"
-
-[build-dependencies]
-bindgen = "0.43.0"
-cmake = "0.1"
+intel-seapi-sys = { version = "^0.1", path = "../intel-seapi-sys" }

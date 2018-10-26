@@ -2,21 +2,14 @@
 // Copyright © 2018 The developers of intel-seapi. See the COPYRIGHT file in the top-level directory of this distribution and at https://raw.githubusercontent.com/lemonrock/intel-seapi/master/COPYRIGHT.
 
 
-#![allow(missing_docs)]
-#![allow(non_snake_case)]
-#![allow(non_upper_case_globals)]
-#![allow(non_camel_case_types)]
+use super::*;
+use ::std::ptr::null_mut;
 
 
-//! #intel-seapi
-//! 
-//! This is a rust library.
-
-
-extern crate core;
-extern crate libc;
-
-
-include!(concat!(env!("OUT_DIR"), "/ittnotify.bindgen.rs"));
-
-include!(concat!(env!("OUT_DIR"), "/jitprofiling.bindgen.rs"));
+include!("is_jit_profiling_inactive.rs");
+include!("is_jit_profiling_sampling.rs");
+include!("notify_method_load_finished.rs");
+include!("notify_method_load_update.rs");
+include!("notify_method_shutdown.rs");
+include!("notify_method_unload_start.rs");
+include!("unique_method_identifier.rs");

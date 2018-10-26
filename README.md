@@ -1,6 +1,6 @@
 # intel-seapi
 
-[intel-seapi] is a FFI wrapper for the Intel Single Event API (SEAPI, also known as [IntelSEAPI]) and `ittnotify`, as used by Intel VTune. ***This particular wrapper uses a fork of [IntelSEAPI] because the upstream code base doesn't support cross-compilation or the MUSL C library.***
+[intel-seapi] is a FFI wrapper for the Intel Single Event API (SEAPI, also known as [IntelSEAPI]) and `ittnotify`, as used by Intel VTune. ITT stands for 'Instrumentation and Tracing Technology'. ***This particular wrapper uses a fork of [IntelSEAPI] because the upstream code base doesn't support cross-compilation or the MUSL C library.***
 
 It provides a static link and generates Rust FFI bindings to the `libittnotify.a/.obj` library, and also compiles , but does not link or generate Rust bindings for, the`libIntelSEAPI.dylib/.so/.dll` dynamic library (this is because it is only ever built dynamically and because it is designed to be used from C++).
 
