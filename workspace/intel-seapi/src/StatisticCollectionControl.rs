@@ -40,10 +40,22 @@ impl StatisticCollectionControl
 	/// Applies a name to the current thread.
 	///
 	/// Must not contain ASCII NUL.
+	#[cfg(unix)]
 	#[inline(always)]
 	pub fn name_current_thread(name: &str)
 	{
 		let name = CString::new(name).unwrap();
 		unsafe { __itt_thread_set_name(name.as_ptr()) }
+	}
+
+	/// Applies a name to the current thread.
+	///
+	/// Must not contain ASCII NUL.
+	#[cfg(windows)]
+	#[inline(always)]
+	pub fn name_current_thread(name: &str)
+	{
+		let name = CString::new(name).unwrap();
+		unsafe { __itt_thread_set_nameA(name.as_ptr()) }
 	}
 }

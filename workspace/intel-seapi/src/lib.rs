@@ -44,6 +44,8 @@ use ::std::ptr::write_volatile;
 /// Wrappers to make it easier to using the JIT event listener agent.
 pub mod jit;
 
+#[cfg(test)] pub(crate) mod tests;
+
 
 include!("Domain.rs");
 include!("Event.rs");
@@ -54,4 +56,5 @@ include!("Region.rs");
 include!("StartedEvent.rs");
 include!("StatisticCollectionControl.rs");
 include!("StringHandle.rs");
+include!("Task.rs");
 include!("Timestamp.rs");

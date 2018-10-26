@@ -9,7 +9,9 @@ Downstream crates can use the generated build variables `cargo:include`, `cargo:
 
 ## Limitations
 
+* Does not currently work on Windows, as a completely different set of APIs (ending in `A` and `W`) are built for Windows by `libittnotify`.
 * The dynamic library `IntelSEAPI` is built but not linked and no bindings are generated for it.
+* Bindgen does not generate correct bindings for most of `libittnotify` because the C headers' function declarations do not reflect the actual managled names created. Consequently only a small subset of bindings is provided; additional bindings generated but not yet corrected are in `BindingsAsGeneratedByBingen.rs`.
 
 
 ## Cross-Compilation

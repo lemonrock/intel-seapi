@@ -2,33 +2,11 @@
 // Copyright © 2018 The developers of intel-seapi. See the COPYRIGHT file in the top-level directory of this distribution and at https://raw.githubusercontent.com/lemonrock/intel-seapi/master/COPYRIGHT.
 
 
-/// A region.
-#[derive(Debug)]
-pub struct Task(Domain);
+use super::*;
 
-impl Task
+
+#[test]
+pub fn confirm_linking_has_worked()
 {
-	/// Begins a task.
-	#[inline(always)]
-	pub fn begin<'b>(domain: Domain, name: StringHandle, parent: Option<IdentifierInstance<'b>>) -> Self
-	{
-		let parent = match parent
-		{
-			None => Identifier::Null.0.clone(),
-			Some(parent) => (parent.1).0.clone(),
-		};
-
-		unsafe { __itt_task_begin(domain.constant_pointer(), Identifier::Null.0, parent, name.mutable_pointer())  };
-
-		Task(domain)
-	}
-
-	/// Ends a task.
-	#[inline(always)]
-	pub fn end(self) -> Domain
-	{
-		unsafe { __itt_task_end (self.0.constant_pointer()) };
-		self.0
-	}
+	unsafe { __itt_pause() };
 }
-

@@ -15,11 +15,31 @@ impl Domain
 	/// Name can be almost anything (although it must not contain ASCII NUL), but a URI or Java-like style of `com.my_company.my_application` is recommended by Intel.
 	///
 	/// Call is thread-safe.
+	#[cfg(unix)]
 	#[inline(always)]
 	pub fn new(name: &str) -> Result<Self, ()>
 	{
 		let name = CString::new(name).unwrap();
 		let inner = unsafe { __itt_domain_create(name.as_ptr()) };
+		if inner.is_null()
+		{
+			Err(())
+		}
+		else
+		{
+			Ok(Domain(unsafe { NonNull::new_unchecked(inner)}))
+		}
+	}
+
+	/// Name can be almost anything (although it must not contain ASCII NUL), but a URI or Java-like style of `com.my_company.my_application` is recommended by Intel.
+	///
+	/// Call is thread-safe.
+	#[cfg(windows)]
+	#[inline(always)]
+	pub fn new(name: &str) -> Result<Self, ()>
+	{
+		let name = CString::new(name).unwrap();
+		let inner = unsafe { __itt_domain_createA(name.as_ptr()) };
 		if inner.is_null()
 		{
 			Err(())

@@ -45,8 +45,6 @@ fn main()
 
 	println!("cargo:rustc-link-lib=static=ittnotify");
 	
-	bindgen_ittnotify(&include_folder_path, &out_dir);
-	
 	bindgen_jitprofiling(&include_folder_path, &out_dir)
 }
 
@@ -162,48 +160,6 @@ fn include_folder_path(install_folder_path: &Path) -> PathBuf
 fn print_cargo_path_value(name: &str, path_value: &Path)
 {
 	println!("cargo:{}={}", name, path_value.to_str().unwrap());
-}
-
-fn bindgen_ittnotify(include_folder_path: &Path, out_dir: &str)
-{
-	let mut header_filer_path = PathBuf::from(include_folder_path);
-	header_filer_path.push("ittnotify.h");
-
-	let mut rust_fmt_file_path = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
-	rust_fmt_file_path.push("rustfmt.toml");
-
-	let mut bindings_file_path = PathBuf::from(out_dir);
-	bindings_file_path.push("ittnotify.bindgen.rs");
-
-	Builder::default()
-		.header(header_filer_path.to_str().unwrap())
-		.ctypes_prefix("::libc")
-		.default_enum_style(EnumVariation::Rust)
-		.derive_copy(true)
-		.derive_debug(true)
-		.derive_default(true)
-		.derive_eq(true)
-		.derive_hash(true)
-		.derive_ord(true)
-		.derive_partialeq(true)
-		.derive_partialord(true)
-		.generate_comments(true)
-		.impl_debug(true)
-		.impl_partialeq(true)
-		.layout_tests(false)
-		.prepend_enum_name(false)
-		.rustfmt_bindings(true)
-		.rustfmt_configuration_file(Some(rust_fmt_file_path))
-		.rust_target(RustTarget::Stable_1_26)
-		.use_core()
-		.whitelist_function("__itt.*")
-		.whitelist_type("__itt.*")
-		.whitelist_var("__itt.*")
-	
-		.generate()
-		.expect("Unable to generate bindings for ittnotify.h")
-		.write_to_file(bindings_file_path)
-	.expect("Could not write bindgen bindings for ittnotify.h to ittnotify.bindgen.rs")
 }
 
 fn bindgen_jitprofiling(include_folder_path: &Path, out_dir: &str)

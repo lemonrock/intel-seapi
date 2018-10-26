@@ -19,11 +19,33 @@ impl StringHandle
 	/// Call is thread-safe.
 	///
 	/// Calling more than once with the same `name` parameter will return a reference to the same string handle created for the first call.
+	#[cfg(unix)]
 	#[inline(always)]
 	pub fn new(name: &str) -> Result<Self, ()>
 	{
 		let name = CString::new(name).unwrap();
 		let inner = unsafe { __itt_string_handle_create(name.as_ptr()) };
+		if inner.is_null()
+		{
+			Err(())
+		}
+		else
+		{
+			Ok(StringHandle(unsafe { NonNull::new_unchecked(inner)}))
+		}
+	}
+
+	/// Name can be almost anything (although it must not contain ASCII NUL), but a URI or Java-like style of `com.my_company.my_application` is recommended by Intel.
+	///
+	/// Call is thread-safe.
+	///
+	/// Calling more than once with the same `name` parameter will return a reference to the same string handle created for the first call.
+	#[cfg(windows)]
+	#[inline(always)]
+	pub fn new(name: &str) -> Result<Self, ()>
+	{
+		let name = CString::new(name).unwrap();
+		let inner = unsafe { __itt_string_handle_createA(name.as_ptr()) };
 		if inner.is_null()
 		{
 			Err(())

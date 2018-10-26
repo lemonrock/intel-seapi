@@ -9,18 +9,26 @@ pub struct Event(__itt_event);
 impl Event
 {
 	/// Creates a new instance.
+	#[cfg(unix)]
 	#[inline(always)]
 	pub fn new(name: &str) -> Self
 	{
 		Event(unsafe { __itt_event_create(name.as_bytes().as_ptr() as *const i8, name.len() as i32) })
 	}
 
+	/// Creates a new instance.
+	#[cfg(windows)]
+	#[inline(always)]
+	pub fn new(name: &str) -> Self
+	{
+		Event(unsafe { __itt_event_createA(name.as_bytes().as_ptr() as *const i8, name.len() as i32) })
+	}
+
 	/// A ping event just occurs again and again, but has no associated time it occupies.
 	#[inline(always)]
-	pub fn ping(self) -> Self
+	pub fn ping(&self)
 	{
 		unsafe { __itt_event_start(self.0) };
-		self
 	}
 
 	/// A timed event has a time it starts and a time it ends.
