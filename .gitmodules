@@ -1,5 +1,5 @@
 [submodule "lib/IntelSEAPI"]
-	path = lib/IntelSEAPI
+	path = workspace/intel-seapi-sys/lib/IntelSEAPI
 	url = https://github.com/intel/IntelSEAPI
 [submodule ".cargo"]
 	path = .cargo
