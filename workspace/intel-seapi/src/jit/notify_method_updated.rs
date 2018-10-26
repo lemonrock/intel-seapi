@@ -2,17 +2,9 @@
 // Copyright © 2018 The developers of intel-seapi. See the COPYRIGHT file in the top-level directory of this distribution and at https://raw.githubusercontent.com/lemonrock/intel-seapi/master/COPYRIGHT.
 
 
-/// Notify the JIT event listener agent that it should shutdown.
-///
-/// Returns true if shutdown succeeded.
+/// Notify the JIT event listener agent that a JIT'd method is going to be destroyed.
 #[inline(always)]
-pub fn notify_shutdown() -> bool
+pub fn notify_method_updated(event_data: &mut iJIT_Method_Load)
 {
-	let result = unsafe { iJIT_NotifyEvent(iJIT_JVM_EVENT::iJVM_EVENT_TYPE_SHUTDOWN, null_mut()) };
-	match result
-	{
-		1 => true,
-		0 => false,
-		_ => panic!("Invalid result `{}` from iJIT_NotifyEvent(iJIT_JVM_EVENT::iJVM_EVENT_TYPE_SHUTDOWN, null_mut())", result)
-	}
+	unsafe { iJIT_NotifyEvent(iJIT_JVM_EVENT::iJVM_EVENT_TYPE_METHOD_UPDATE, event_data as *mut iJIT_Method_Load as *mut _) };
 }

@@ -3,13 +3,12 @@
 
 
 use super::*;
-use ::std::ptr::null_mut;
 
 
 include!("is_jit_profiling_inactive.rs");
 include!("is_jit_profiling_sampling.rs");
 include!("notify_method_load_finished.rs");
-include!("notify_method_load_update.rs");
-include!("notify_method_shutdown.rs");
-include!("notify_method_unload_start.rs");
+include!("notify_method_unload_started.rs");
+include!("notify_method_updated.rs");
+include!("notify_shutdown.rs");
 include!("unique_method_identifier.rs");

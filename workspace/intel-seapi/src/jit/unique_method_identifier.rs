@@ -6,7 +6,7 @@
 ///
 /// Safely wraps `iJIT_GetNewMethodID(void)`.
 #[inline(always)]
-pub fn unique_method_identifier(&self) -> u32
+pub fn unique_method_identifier() -> u32
 {
 	unsafe { iJIT_GetNewMethodID() }
 }

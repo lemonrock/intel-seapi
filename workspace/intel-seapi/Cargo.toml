@@ -18,5 +18,5 @@ publish = true
 version = "0.1.0"
 
 [dependencies]
-libc = "^0.2"
+either = "^1.5"
 intel-seapi-sys = { version = "^0.1", path = "../intel-seapi-sys" }

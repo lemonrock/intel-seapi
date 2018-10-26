@@ -2,17 +2,33 @@
 // Copyright © 2018 The developers of intel-seapi. See the COPYRIGHT file in the top-level directory of this distribution and at https://raw.githubusercontent.com/lemonrock/intel-seapi/master/COPYRIGHT.
 
 
-/// Notify the JIT event listener agent that it should shutdown.
-///
-/// Returns true if shutdown succeeded.
-#[inline(always)]
-pub fn notify_shutdown() -> bool
+/// A region.
+#[derive(Debug)]
+pub struct Task(Domain);
+
+impl Task
 {
-	let result = unsafe { iJIT_NotifyEvent(iJIT_JVM_EVENT::iJVM_EVENT_TYPE_SHUTDOWN, null_mut()) };
-	match result
+	/// Begins a task.
+	#[inline(always)]
+	pub fn begin<'b>(domain: Domain, name: StringHandle, parent: Option<IdentifierInstance<'b>>) -> Self
 	{
-		1 => true,
-		0 => false,
-		_ => panic!("Invalid result `{}` from iJIT_NotifyEvent(iJIT_JVM_EVENT::iJVM_EVENT_TYPE_SHUTDOWN, null_mut())", result)
+		let parent = match parent
+		{
+			None => Identifier::Null,
+			Some(parent) => parent.0.clone(),
+		};
+
+		unsafe { __itt_task_begin(instance_identifier.0.constant_pointer(), Identifier::Null, parent, name.0.mutable_pointer())  };
+
+		Task(domain)
+	}
+
+	/// Ends a task.
+	#[inline(always)]
+	pub fn end(self) -> Domain
+	{
+		unsafe { __itt_task_end (self.0.constant_pointer()) };
+		self.0
 	}
 }
+

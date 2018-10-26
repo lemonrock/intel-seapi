@@ -132,7 +132,6 @@
 //! The collector should not fail due to construct nesting issues, nor attempt to directly indicate the problem.
 
 
-extern crate core;
 extern crate libc;
 
 

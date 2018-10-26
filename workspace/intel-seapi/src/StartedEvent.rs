@@ -2,9 +2,35 @@
 // Copyright © 2018 The developers of intel-seapi. See the COPYRIGHT file in the top-level directory of this distribution and at https://raw.githubusercontent.com/lemonrock/intel-seapi/master/COPYRIGHT.
 
 
-/// Notify the JIT event listener agent that a JIT'd method has changed.
-#[inline(always)]
-pub fn notify_method_unload_start(&self, event_data: &mut iJIT_Method_Load)
+/// A started timed event.
+#[derive(Debug)]
+pub struct StartedEvent(__itt_event, bool);
+
+impl Drop for StartedEvent
 {
-	unsafe { iJIT_NotifyEvent(iJIT_JVM_EVENT::iJVM_EVENT_TYPE_METHOD_UNLOAD_START, event_data as *mut iJIT_Method_Load_V3 as *mut _) };
+	#[inline(always)]
+	fn drop(&mut self)
+	{
+		if self.1
+		{
+			return;
+		}
+		unsafe { __itt_event_end(self.0) };
+	}
+}
+
+impl StartedEvent
+{
+	/// A timed event has a time it starts and a time it ends.
+	#[inline(always)]
+	pub fn stop(mut self) -> Event
+	{
+		if self.1
+		{
+			return Event(self.0)
+		}
+		unsafe { __itt_event_end(self.0) };
+		self.1 = true;
+		Event(self.0)
+	}
 }

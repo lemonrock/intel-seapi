@@ -4,7 +4,7 @@
 
 /// Notify the JIT event listener agent that a JIT'd method has been created but not yet executed.
 #[inline(always)]
-pub fn notify_method_load_finished(&self, event_data: &mut iJIT_Method_Load_V3)
+pub fn notify_method_load_finished(event_data: &mut iJIT_Method_Load_V3)
 {
 	unsafe { iJIT_NotifyEvent(iJIT_JVM_EVENT::iJVM_EVENT_TYPE_METHOD_LOAD_FINISHED_V3, event_data as *mut iJIT_Method_Load_V3 as *mut _) };
 }

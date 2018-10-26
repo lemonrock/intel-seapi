@@ -2,9 +2,23 @@
 // Copyright © 2018 The developers of intel-seapi. See the COPYRIGHT file in the top-level directory of this distribution and at https://raw.githubusercontent.com/lemonrock/intel-seapi/master/COPYRIGHT.
 
 
-/// Notify the JIT event listener agent that a JIT'd method is going to be destroyed.
-#[inline(always)]
-pub fn notify_method_update(&self, event_data: &mut iJIT_Method_Load)
+/// Represents a 'Domain'.
+///
+/// Can never be destroyed or free'd.
+///
+/// Available to any thread, irrespective of which thread created it.
+#[derive(Debug, Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
+pub struct Timestamp(__itt_timestamp);
+
+impl Timestamp
 {
-	unsafe { iJIT_NotifyEvent(iJIT_JVM_EVENT::iJVM_EVENT_TYPE_METHOD_UPDATE, event_data as *mut iJIT_Method_Load_V3 as *mut _) };
+	/// Equivalent to no timestamp.
+	pub(crate) const None: Self = Timestamp(::std::u64::MAX as __itt_timestamp);
+
+	/// Timestamp for the current moment.
+	#[inline(always)]
+	pub fn now() -> Self
+	{
+		Timestamp(unsafe { __itt_get_timestamp() })
+	}
 }
