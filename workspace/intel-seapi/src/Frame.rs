@@ -11,17 +11,17 @@
 /// * Frames always represent periods of elapsed time;
 /// * By default, frames have no nesting relationships.
 #[derive(Debug)]
-pub struct Frame<'a>(Either<Domain, IdentifierInstance<'a>>);
+pub struct Frame<'a>(Either<&'a Domain, IdentifierInstance<'a>>);
 
 impl<'a> Frame<'a>
 {
 	/// Begins a frame instance.
 	#[inline(always)]
-	pub fn begin(on: Either<Domain, IdentifierInstance<'a>>) -> Self
+	pub fn begin(on: Either<&'a Domain, IdentifierInstance<'a>>) -> Self
 	{
 		match on
 		{
-			Left(ref domain) => unsafe { __itt_frame_begin_v3(domain.constant_pointer(), null_mut()) },
+			Left(domain) => unsafe { __itt_frame_begin_v3(domain.constant_pointer(), null_mut()) },
 			Right(ref identifier_instance) => unsafe { __itt_frame_begin_v3(identifier_instance.0.constant_pointer(), &identifier_instance.1 as *const _ as *mut _) },
 		}
 
@@ -38,7 +38,7 @@ impl<'a> Frame<'a>
 
 		match self.0
 		{
-			Left(ref domain) => unsafe { __itt_frame_submit_v3(domain.constant_pointer(), null_mut(), begin.0, end.0) },
+			Left(domain) => unsafe { __itt_frame_submit_v3(domain.constant_pointer(), null_mut(), begin.0, end.0) },
 			Right(ref identifier_instance) => unsafe { __itt_frame_submit_v3(identifier_instance.0.constant_pointer(), &identifier_instance.1 as *const _ as *mut _, begin.0, end.0) },
 		}
 	}
@@ -52,13 +52,13 @@ impl<'a> Frame<'a>
 
 	/// Ends a frame instance.
 	#[inline(always)]
-	pub fn end(self) -> Either<Domain, IdentifierInstance<'a>>
+	pub fn end(self) -> Either<&'a Domain, IdentifierInstance<'a>>
 	{
 		let on = self.0;
 
 		match on
 		{
-			Left(ref domain) => unsafe { __itt_frame_end_v3(domain.constant_pointer(), null_mut()) },
+			Left(domain) => unsafe { __itt_frame_end_v3(domain.constant_pointer(), null_mut()) },
 			Right(ref identifier_instance) => unsafe { __itt_frame_end_v3(identifier_instance.0.constant_pointer(), &identifier_instance.1 as *const _ as *mut _) },
 		}
 

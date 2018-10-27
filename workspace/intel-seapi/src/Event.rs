@@ -6,6 +6,15 @@
 #[derive(Debug)]
 pub struct Event(__itt_event);
 
+impl<'a> From<&'a str> for Event
+{
+	#[inline(always)]
+	fn from(name: &'a str) -> Self
+	{
+		Self::new(name)
+	}
+}
+
 impl Event
 {
 	/// Creates a new instance.

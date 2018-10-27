@@ -10,6 +10,15 @@
 #[derive(Debug, Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct Domain(NonNull<__itt_domain>);
 
+impl<'a> From<&'a str> for Domain
+{
+	#[inline(always)]
+	fn from(name: &'a str) -> Self
+	{
+		Self::new(name)
+	}
+}
+
 impl Domain
 {
 	/// Name can be almost anything (although it must not contain ASCII NUL), but a URI or Java-like style of `com.my_company.my_application` is recommended by Intel.
@@ -17,18 +26,12 @@ impl Domain
 	/// Call is thread-safe.
 	#[cfg(unix)]
 	#[inline(always)]
-	pub fn new(name: &str) -> Result<Self, ()>
+	pub fn new(name: &str) -> Self
 	{
 		let name = CString::new(name).unwrap();
 		let inner = unsafe { __itt_domain_create(name.as_ptr()) };
-		if inner.is_null()
-		{
-			Err(())
-		}
-		else
-		{
-			Ok(Domain(unsafe { NonNull::new_unchecked(inner)}))
-		}
+		assert!(!inner.is_null());
+		Domain(unsafe { NonNull::new_unchecked(inner)})
 	}
 
 	/// Name can be almost anything (although it must not contain ASCII NUL), but a URI or Java-like style of `com.my_company.my_application` is recommended by Intel.
@@ -48,6 +51,20 @@ impl Domain
 		{
 			Ok(Domain(unsafe { NonNull::new_unchecked(inner)}))
 		}
+	}
+
+	/// Begins a task.
+	#[inline(always)]
+	pub fn begin_task<'a, 'b, 's>(&'a self, name: &'s StringHandle, parent: Option<IdentifierInstance<'b>>) -> Task<'a>
+	{
+		Task::begin(self, name, parent)
+	}
+
+	/// Begins a frame instance.
+	#[inline(always)]
+	pub fn begin_frame<'a>(&'a self) -> Frame<'a>
+	{
+		Frame::begin(Left(self))
 	}
 
 	/// Is collection of any statistics associated with this domain enabled?

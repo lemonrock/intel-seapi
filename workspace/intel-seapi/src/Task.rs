@@ -4,13 +4,13 @@
 
 /// A region.
 #[derive(Debug)]
-pub struct Task(Domain);
+pub struct Task<'a>(&'a Domain);
 
-impl Task
+impl<'a> Task<'a>
 {
 	/// Begins a task.
 	#[inline(always)]
-	pub fn begin<'b>(domain: Domain, name: StringHandle, parent: Option<IdentifierInstance<'b>>) -> Self
+	pub fn begin<'b, 's>(domain: &'a Domain, name: &'s StringHandle, parent: Option<IdentifierInstance<'b>>) -> Self
 	{
 		let parent = match parent
 		{
@@ -25,10 +25,9 @@ impl Task
 
 	/// Ends a task.
 	#[inline(always)]
-	pub fn end(self) -> Domain
+	pub fn end(self)
 	{
-		unsafe { __itt_task_end (self.0.constant_pointer()) };
-		self.0
+		unsafe { __itt_task_end (self.0.constant_pointer()) }
 	}
 }
 

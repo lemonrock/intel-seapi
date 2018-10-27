@@ -10,7 +10,7 @@ impl<'a> Region<'a>
 {
 	/// Begins a region.
 	#[inline(always)]
-	pub fn begin<'b : 'a>(instance_identifier: IdentifierInstance<'a>, name: StringHandle, parent: Option<IdentifierInstance<'b>>) -> Self
+	pub fn begin<'b : 'a, 's>(instance_identifier: IdentifierInstance<'a>, name: &'s StringHandle, parent: Option<IdentifierInstance<'b>>) -> Self
 	{
 		let parent = match parent
 		{

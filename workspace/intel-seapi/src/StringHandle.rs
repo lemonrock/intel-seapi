@@ -12,6 +12,15 @@
 #[derive(Debug, Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct StringHandle(NonNull<__itt_string_handle >);
 
+impl<'a> From<&'a str> for StringHandle
+{
+	#[inline(always)]
+	fn from(name: &'a str) -> Self
+	{
+		Self::new(name)
+	}
+}
+
 impl StringHandle
 {
 	/// Name can be almost anything (although it must not contain ASCII NUL), but a URI or Java-like style of `com.my_company.my_application` is recommended by Intel.
@@ -21,18 +30,12 @@ impl StringHandle
 	/// Calling more than once with the same `name` parameter will return a reference to the same string handle created for the first call.
 	#[cfg(unix)]
 	#[inline(always)]
-	pub fn new(name: &str) -> Result<Self, ()>
+	pub fn new(name: &str) -> Self
 	{
 		let name = CString::new(name).unwrap();
 		let inner = unsafe { __itt_string_handle_create(name.as_ptr()) };
-		if inner.is_null()
-		{
-			Err(())
-		}
-		else
-		{
-			Ok(StringHandle(unsafe { NonNull::new_unchecked(inner)}))
-		}
+		assert!(!inner.is_null());
+		StringHandle(unsafe { NonNull::new_unchecked(inner)})
 	}
 
 	/// Name can be almost anything (although it must not contain ASCII NUL), but a URI or Java-like style of `com.my_company.my_application` is recommended by Intel.

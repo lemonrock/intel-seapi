@@ -4,7 +4,7 @@
 
 /// An identifier instance.
 #[derive(Debug)]
-pub struct IdentifierInstance<'a>(Domain, Identifier<'a>);
+pub struct IdentifierInstance<'a>(&'a Domain, Identifier<'a>);
 
 impl<'a> IdentifierInstance<'a>
 {
@@ -15,12 +15,26 @@ impl<'a> IdentifierInstance<'a>
 	///
 	/// Intel states "Instance IDs are not domain specific" (sic)!
 	#[inline(always)]
-	pub fn new(domain: Domain, identifier: Identifier<'a>) -> Self
+	pub fn new(domain: &'a Domain, identifier: Identifier<'a>) -> Self
 	{
 		assert!(!identifier.is_null(), "Identifier is null-equivalent");
 
 		unsafe { __itt_id_create(domain.constant_pointer(), identifier.0.clone()) };
 		IdentifierInstance(domain, identifier)
+	}
+
+	/// Begins a frame instance.
+	#[inline(always)]
+	pub fn begin_frame(self) -> Frame<'a>
+	{
+		Frame::begin(Right(self))
+	}
+
+	/// Begins a region.
+	#[inline(always)]
+	pub fn begin_region<'b : 'a, 's>(self, name: &'s StringHandle, parent: Option<IdentifierInstance<'b>>) -> Region<'a>
+	{
+		Region::begin(self, name, parent)
 	}
 
 	/// Destroys instance, enabling re-use of the identifier.

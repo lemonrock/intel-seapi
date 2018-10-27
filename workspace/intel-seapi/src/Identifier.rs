@@ -42,4 +42,34 @@ impl<'a> Identifier<'a>
 			PhantomData
 		)
 	}
+
+	/// Creates a new identifier.
+	#[inline(always)]
+	pub fn wrap<T: 'a>(address: &T) -> Self
+	{
+		Self::new(address, 0)
+	}
+
+	/// Creates a new identifier.
+	#[inline(always)]
+	pub fn new_without_lifetime<T>(address: NonNull<T>, extra: u64) -> Self
+	{
+		Identifier
+		(
+			__itt_id
+			{
+				d1: address.as_ptr() as usize as u64,
+				d2: extra,
+				d3: 0,
+			},
+			PhantomData
+		)
+	}
+
+	/// Creates a new identifier.
+	#[inline(always)]
+	pub fn wrap_without_lifetime<T>(address: NonNull<T>) -> Self
+	{
+		Self::new_without_lifetime(address, 0)
+	}
 }
