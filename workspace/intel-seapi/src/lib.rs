@@ -58,3 +58,60 @@ include!("StatisticCollectionControl.rs");
 include!("StringHandle.rs");
 include!("Task.rs");
 include!("Timestamp.rs");
+
+/// Wraps up creation of a static mut Domain field.
+#[macro_export]
+macro_rules! domain
+{
+	($name: ident) =>
+	{
+		unsafe
+		{
+			static mut $name: Option<$crate::intel_seapi::Domain> = None;
+
+			if $name.is_none()
+			{
+				$name = Some(stringify!($name).into())
+			}
+			$name.as_ref().unwrap()
+		}
+	}
+}
+
+/// Wraps up creation of a static mut Event field.
+#[macro_export]
+macro_rules! event
+{
+	($name: ident) =>
+	{
+		unsafe
+		{
+			static mut $name: Option<$crate::intel_seapi::Event> = None;
+
+			if $name.is_none()
+			{
+				$name = Some(stringify!($name).into())
+			}
+			$name.as_mut().unwrap()
+		}
+	}
+}
+
+/// Wraps up creation of a static mut StringHandle field.
+#[macro_export]
+macro_rules! string_handle
+{
+	($name: ident) =>
+	{
+		unsafe
+		{
+			static mut $name: Option<$crate::intel_seapi::StringHandle> = None;
+
+			if $name.is_none()
+			{
+				$name = Some(stringify!($name).into())
+			}
+			$name.as_ref().unwrap()
+		}
+	}
+}
