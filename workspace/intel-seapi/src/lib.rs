@@ -67,7 +67,7 @@ macro_rules! domain
 	{
 		unsafe
 		{
-			static mut $name: Option<$crate::intel_seapi::Domain> = None;
+			static mut $name: Option<::intel_seapi::Domain> = None;
 
 			if $name.is_none()
 			{
@@ -86,7 +86,7 @@ macro_rules! event
 	{
 		unsafe
 		{
-			static mut $name: Option<$crate::intel_seapi::Event> = None;
+			static mut $name: Option<::intel_seapi::Event> = None;
 
 			if $name.is_none()
 			{
@@ -105,7 +105,7 @@ macro_rules! string_handle
 	{
 		unsafe
 		{
-			static mut $name: Option<$crate::intel_seapi::StringHandle> = None;
+			static mut $name: Option<::intel_seapi::StringHandle> = None;
 
 			if $name.is_none()
 			{
