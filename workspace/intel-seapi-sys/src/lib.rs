@@ -240,7 +240,7 @@ extern "C"
 	/// Create a string handle.
 	#[cfg(windows)]
 	#[link_name = "__itt_string_handle_createW_init_3_0"]
-	pub fn __itt_string_handle_createW(name: *const c_wchar_t) -> *mut __itt_string_handle;
+	pub fn __itt_string_handle_createW(name: *const wchar_t) -> *mut __itt_string_handle;
 
 	/// Return timestamp corresponding to the current moment.
 	///
@@ -267,7 +267,7 @@ extern "C"
 	/// The `name` is not terminated by an ASCII NUL (`\0`) and `namelen` should be the exact length, ie it is equivalent to a Rust slice.
 	#[cfg(windows)]
 	#[link_name = "__itt_event_createW_init_3_0"]
-	pub fn __itt_event_createW(name: *const wcchar_t, namelen: c_int) -> __itt_event;
+	pub fn __itt_event_createW(name: *const wchar_t, namelen: c_int) -> __itt_event;
 
 	/// Record an event occurrence.
 	///
